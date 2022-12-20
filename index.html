@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <!-- Web App Config -->
+    <title>Snapdrop</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#3367d6">
+    <meta name="color-scheme" content="dark light">
+    <meta name="apple-mobile-web-app-capable" content="no">
+    <meta name="apple-mobile-web-app-title" content="Snapdrop">
+    <!-- Descriptions -->
+    <meta name="description" content="Instantly share images, videos, PDFs, and links with people nearby. Peer2Peer and Open Source. No Setup, No Signup.">
+    <meta name="keywords" content="File, Transfer, Share, Peer2Peer">
+    <meta name="author" content="RobinLinus">
+    <meta property="og:title" content="Snapdrop">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://snapdrop.net/">
+    <meta property="og:author" content="https://facebook.com/RobinLinus">
+    <meta name="twitter:author" content="@RobinLinus">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:description" content="Instantly share images, videos, PDFs, and links with people nearby. Peer2Peer and Open Source. No Setup, No Signup.">
+    <meta name="og:description" content="Instantly share images, videos, PDFs, and links with people nearby. Peer2Peer and Open Source. No Setup, No Signup.">
+    <!-- Icons -->
+    <link rel="icon" sizes="96x96" href="images/favicon-96x96.png">
+    <link rel="shortcut icon" href="images/favicon-96x96.png">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <meta name="msapplication-TileImage" content="images/mstile-150x150.png">
+    <link rel="fluid-icon" type="image/png" href="images/android-chrome-192x192.png">
+    <meta name="twitter:image" content="https://snapdrop.net/images/twitter-stream.jpg">
+    <meta property="og:image" content="https://snapdrop.net/images/twitter-stream.jpg">
+    <!-- Resources -->
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="language" href="language.json">
+
+
+</head>
+
+<body translate="no">
+    <header class="row-reverse">
+        <a href="#about" class="icon-button" title="About Snapdrop">
+            <svg class="icon">
+                <use xlink:href="#info-outline" />
+            </svg>
+        </a>
+        <a href="#"  id="trans"  class="icon-button" title="Enable translate" >
+            <svg class="icon">
+                <use xlink:href="#icon-translate" />
+            </svg>
+        </a>
+        <a href="#" id="theme" class="icon-button" title="Switch Darkmode/Lightmode" >
+            <svg class="icon">
+                <use xlink:href="#icon-theme" />
+            </svg>
+        </a>
+        <a href="#" id="notification" class="icon-button" title="Enable Notifications" hidden>
+            <svg class="icon">
+                <use xlink:href="#notifications" />
+            </svg>
+        </a>
+        <a href="#" id="install" class="icon-button" title="Install Snapdrop" hidden>
+            <svg class="icon">
+                <use xlink:href="#homescreen" />
+            </svg>
+        </a>
+    </header>
+    <!-- Peers -->
+    <x-peers class="center"></x-peers>
+    <x-no-peers>
+        <h2 id="Title">Open Snapdrop on other devices to send files</h2>
+    </x-no-peers>
+    <x-instructions desktop="Click to send files or right click to send a message" mobile="Tap to send files or long tap to send a message"></x-instructions>
+    <!-- Footer -->
+    <footer class="column">
+        <svg class="icon logo">
+            <use xlink:href="#wifi-tethering" />
+        </svg>
+        <div id="displayName" >The easiest way to transfer data across devices</div>
+        <div id="BottomSecondTitle" class="font-body2">You can be discovered by everyone on this network</div>
+    </footer>
+    <!-- Receive Dialog -->
+    <x-dialog id="receiveDialog">
+        <x-background class="full center">
+            <x-paper shadow="2">
+                <h3>File Received</h3>
+                <div class="font-subheading" id="fileName">Filename</div>
+                <div class="font-body2" id="fileSize"></div>
+                <div class='preview' style="visibility: hidden;">
+                    <img id='img-preview' src="">
+                </div>
+                <div class="row">
+                    <label for="autoDownload" class="grow">Ask to save each file before downloading</label>
+                    <input type="checkbox" id="autoDownload" checked="">
+                </div>
+                <div class="row-reverse">
+                    <a class="button" close id="download" title="Download File" autofocus id="Save" >Save</a>
+                    <button class="button" close id="Ignore">Ignore</button>
+                </div>
+            </x-paper>
+        </x-background>
+    </x-dialog>
+    <!-- Send Text Dialog -->
+    <x-dialog id="sendTextDialog">
+        <form action="#">
+            <x-background class="full center">
+                <x-paper shadow="2">
+                    <h3>Send a Message</h3>
+                    <div id="textInput" class="textarea" role="textbox" placeholder="Send a message" autocomplete="off" autofocus contenteditable></div>
+                    <div class="row-reverse">
+                        <button class="button" type="submit" close id="Send">Send</button>
+                        <a class="button" close id="Cancel">Cancel</a>
+                    </div>
+                </x-paper>
+            </x-background>
+        </form>
+    </x-dialog>
+    <!-- Receive Text Dialog -->
+    <x-dialog id="receiveTextDialog">
+        <x-background class="full center">
+            <x-paper shadow="2">
+                <h3 id="MessRec">Message Received</h3>
+                <div class="font-subheading" id="text"></div>
+                <div class="row-reverse">
+                    <button class="button" id="copy" close autofocus>Copy</button>
+                    <button class="button" close id ="Close">Close</button>
+                </div>
+            </x-paper>
+        </x-background>
+    </x-dialog>
+    <!-- Toast -->
+    <div class="toast-container full center">
+        <x-toast class="row" shadow="1" id="toast">File Transfer Completed</x-toast>
+    </div>
+    <!-- About Page -->
+    <x-about id="about" class="full center column">
+        <section class="center column fade-in">
+            <header class="row-reverse">
+                <a href="#" class="close icon-button">
+                    <svg class="icon">
+                        <use xlink:href="#close" />
+                    </svg>
+                </a>
+            </header>
+            <svg class="icon logo">
+                <use xlink:href="#wifi-tethering" />
+            </svg>
+            <h1 >Snapdrop</h1>
+            <div id="Aboutext" class="font-subheading">The easiest way to transfer files across devices</div>
+            <div class="row">
+                <a class="icon-button" target="_blank" href="https://github.com/RobinLinus/snapdrop" title="Snapdrop on Github" rel="noreferrer">
+                    <svg class="icon">
+                        <use xlink:href="#github" />
+                    </svg>
+                </a>
+                <a class="icon-button" target="_blank" href="https://twitter.com/intent/tweet?text=https://snapdrop.net%20by%20@robin_linus%20&" title="Tweet about Snapdrop" rel="noreferrer">
+                    <svg class="icon">
+                        <use xlink:href="#twitter" />
+                    </svg>
+                </a>
+                <a class="icon-button" target="_blank" href="yeely.top" title="Bolg Link" rel="noreferrer">
+                    <svg class="icon">
+                        <use xlink:href="#Link" />
+                    </svg>
+                </a>
+                <a class="icon-button" target="_blank" href="https://github.com/RobinLinus/snapdrop/blob/master/docs/faq.md" title="Frequently asked questions" rel="noreferrer">
+                    <svg class="icon">
+                        <use xlink:href="#help-outline" />
+                    </svg>
+                </a>
+            </div>
+            </br></br></br>
+            <div class="font-subheading" >
+                <span style="display: flex;justify-content: center" id="PersonID">
+                    Translate By:Yeely
+                </span>
+                <span id="AbotContent">
+                    Share files only through the LAN and do not use them for illegal purposes
+                </span>
+
+
+            </div>
+        </section>
+        <x-background></x-background>
+    </x-about>
+    <!-- SVG Icon Library -->
+    <svg style="display: none;">
+        <symbol id=wifi-tethering viewBox="0 0 24 24">
+            <path d="M12 11c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 2c0-3.31-2.69-6-6-6s-6 2.69-6 6c0 2.22 1.21 4.15 3 5.19l1-1.74c-1.19-.7-2-1.97-2-3.45 0-2.21 1.79-4 4-4s4 1.79 4 4c0 1.48-.81 2.75-2 3.45l1 1.74c1.79-1.04 3-2.97 3-5.19zM12 3C6.48 3 2 7.48 2 13c0 3.7 2.01 6.92 4.99 8.65l1-1.73C5.61 18.53 4 15.96 4 13c0-4.42 3.58-8 8-8s8 3.58 8 8c0 2.96-1.61 5.53-4 6.92l1 1.73c2.99-1.73 5-4.95 5-8.65 0-5.52-4.48-10-10-10z"></path>
+        </symbol>
+        <symbol id=desktop-mac viewBox="0 0 24 24">
+            <path d="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7l-2 3v1h8v-1l-2-3h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 12H3V4h18v10z"></path>
+        </symbol>
+        <symbol id=phone-iphone viewBox="0 0 24 24">
+            <path d="M15.5 1h-8C6.12 1 5 2.12 5 3.5v17C5 21.88 6.12 23 7.5 23h8c1.38 0 2.5-1.12 2.5-2.5v-17C18 2.12 16.88 1 15.5 1zm-4 21c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4.5-4H7V4h9v14z"></path>
+        </symbol>
+        <symbol id=tablet-mac viewBox="0 0 24 24">
+            <path d="M18.5 0h-14C3.12 0 2 1.12 2 2.5v19C2 22.88 3.12 24 4.5 24h14c1.38 0 2.5-1.12 2.5-2.5v-19C21 1.12 19.88 0 18.5 0zm-7 23c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm7.5-4H4V3h15v16z"></path>
+        </symbol>
+        <symbol id=info-outline viewBox="0 0 24 24">
+            <path d="M11 17h2v-6h-2v6zm1-15C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM11 9h2V7h-2v2z"></path>
+        </symbol>
+        <symbol id=close viewBox="0 0 24 24">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+        </symbol>
+        <symbol id=help-outline viewBox="0 0 24 24">
+            <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"></path>
+        </symbol>
+        <symbol id="twitter">
+            <path d="M23.954 4.569c-.885.389-1.83.654-2.825.775 1.014-.611 1.794-1.574 2.163-2.723-.951.555-2.005.959-3.127 1.184-.896-.959-2.173-1.559-3.591-1.559-2.717 0-4.92 2.203-4.92 4.917 0 .39.045.765.127 1.124C7.691 8.094 4.066 6.13 1.64 3.161c-.427.722-.666 1.561-.666 2.475 0 1.71.87 3.213 2.188 4.096-.807-.026-1.566-.248-2.228-.616v.061c0 2.385 1.693 4.374 3.946 4.827-.413.111-.849.171-1.296.171-.314 0-.615-.03-.916-.086.631 1.953 2.445 3.377 4.604 3.417-1.68 1.319-3.809 2.105-6.102 2.105-.39 0-.779-.023-1.17-.067 2.189 1.394 4.768 2.209 7.557 2.209 9.054 0 13.999-7.496 13.999-13.986 0-.209 0-.42-.015-.63.961-.689 1.8-1.56 2.46-2.548l-.047-.02z" />
+        </symbol>
+        <symbol id="github">
+            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+        </symbol>
+        <g id="notifications">
+            <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
+        </g>
+        <symbol id="homescreen">
+            <path fill="none" d="M0 0h24v24H0V0z" />
+            <path d="M18 1.01L8 1c-1.1 0-2 .9-2 2v3h2V5h10v14H8v-1H6v3c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM10 15h2V8H5v2h3.59L3 15.59 4.41 17 10 11.41z" />
+            <path fill="none" d="M0 0h24v24H0V0z" />
+        </symbol>
+        <symbol id="monetarization">
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z" />
+        </symbol>
+        <symbol id="icon-theme" viewBox="0 0 24 24">
+         <rect fill="none" height="24" width="24"/><path d="M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36c-0.98,1.37-2.58,2.26-4.4,2.26 c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"/>
+        </symbol>
+        <symbol id="icon-translate">
+            <rect fill="none" height="24" width="24"/>
+            <svg  t="1671420267546" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"  width="24" height="24">
+            <path d="M783.74 366.41H658.37V239.48c0-97.57-79.38-176.95-176.95-176.95H240.26c-97.57 0-176.95 79.38-176.95 176.95v241.16c0 97.57 79.38 176.95 176.95 176.95h125.37v126.93c0 97.57 79.38 176.95 176.95 176.95h241.16c97.57 0 176.95-79.38 176.95-176.95V543.36c0-97.57-79.38-176.95-176.95-176.95zM138.22 480.64V239.48c0-56.26 45.77-102.04 102.04-102.04h241.16c56.26 0 102.04 45.77 102.04 102.04v241.16c0 56.26-45.77 102.04-102.04 102.04H240.26c-56.27 0-102.04-45.77-102.04-102.04z m747.56 303.88c0 56.26-45.77 102.04-102.04 102.04H542.58c-56.26 0-102.04-45.77-102.04-102.04V657.59h40.88c97.57 0 176.95-79.38 176.95-176.95v-39.32h125.37c56.26 0 102.04 45.77 102.04 102.04v241.16zM724.28 174.93c65.16 18.59 119.1 64.64 148 126.35 6.37 13.6 19.86 21.58 33.95 21.58 5.32 0 10.72-1.14 15.86-3.54 18.74-8.77 26.81-31.07 18.04-49.81-38.09-81.36-109.27-142.09-195.29-166.63-19.9-5.68-40.62 5.85-46.29 25.75-5.69 19.89 5.83 40.62 25.73 46.3zM298.98 865.78c-65.16-18.59-119.1-64.64-147.99-126.35-8.77-18.74-31.07-26.81-49.81-18.04-18.74 8.77-26.81 31.07-18.04 49.8 38.09 81.36 109.27 142.09 195.29 166.63 3.43 0.98 6.89 1.45 10.29 1.45 16.31 0 31.31-10.73 36-27.19 5.68-19.9-5.84-40.62-25.74-46.3z" fill="#fffff" />
+            <path d="M418.59 466.75c47.2 0 85.6-38.4 85.6-85.6v-28.97c0-47.2-38.4-85.6-85.6-85.6H392.4v-23.41c0-20.69-16.77-37.46-37.46-37.46s-37.46 16.77-37.46 37.46v23.41h-19.17c-47.2 0-85.6 38.4-85.6 85.6v28.97c0 47.2 38.4 85.6 85.6 85.6h19.17v11.16c0 20.69 16.77 37.46 37.46 37.46s37.46-16.77 37.46-37.46v-11.16h26.19z m0-125.24c5.79 0 10.68 4.89 10.68 10.68v28.97c0 5.79-4.89 10.68-10.68 10.68H392.4v-50.33h26.19z m-120.27 50.33c-5.79 0-10.68-4.89-10.68-10.68v-28.97c0-5.79 4.89-10.68 10.68-10.68h19.17v50.33h-19.17zM736.99 578.24c-6.25-13.94-20.35-22.69-35.6-22.11-15.26 0.58-28.65 10.37-33.82 24.74L593 787.98c-7.01 19.46 3.09 40.92 22.55 47.93 4.19 1.51 8.47 2.22 12.69 2.22 15.35 0 29.75-9.51 35.24-24.78l4.4-12.22h86.91l6.66 14.85c8.46 18.88 30.62 27.32 49.5 18.86s27.32-30.62 18.86-49.5l-92.82-207.1z m-42.14 147.98l11.74-32.61 14.62 32.61h-26.36z" fill="#fffff" />
+            </svg>
+        </symbol>
+        <symbol id="Link">
+            <rect fill="none" height="24" width="24"/>
+            <svg t="1671538705780" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3049" width="24" height="24"><path d="M293.461333 981.333333c-64.469333 0-124.373333-24.576-168.917333-70.613333A235.818667 235.818667 0 0 1 55.466667 743.338667c0-64.469333 24.576-124.373333 70.613333-168.917334l118.229333-118.186666c18.432-18.432 47.616-18.432 64.512 0 18.432 18.389333 18.432 47.573333 0 64.469333l-118.229333 118.186667a146.261333 146.261333 0 0 0-43.008 104.448c0 39.936 15.36 75.221333 43.008 104.405333a146.218667 146.218667 0 0 0 104.405333 43.008c38.4 0 75.221333-15.36 104.405334-43.008l150.485333-150.485333a147.370667 147.370667 0 0 0 0-207.274667 169.130667 169.130667 0 0 0-43.008-30.72c-23.04-10.709333-33.792-38.4-23.04-61.397333 10.752-23.04 38.4-33.792 61.44-23.04 26.112 12.288 50.645333 27.648 70.613333 49.152a238.165333 238.165333 0 0 1 0 337.792l-150.485333 150.485333C417.834667 956.757333 357.973333 981.333333 293.461333 981.333333z" fill="#ffffff" p-id="3050"></path><path d="M513.024 666.581333a40.917333 40.917333 0 0 1-18.432-4.608c-26.112-12.288-50.645333-27.648-70.613333-49.152a238.165333 238.165333 0 0 1-70.656-168.874666c0-64.512 24.576-124.373333 70.656-168.917334l150.485333-150.485333a238.165333 238.165333 0 0 1 337.792 0 238.165333 238.165333 0 0 1 0 337.792l-118.229333 118.229333c-18.432 18.432-47.616 18.432-64.512 0-18.432-18.389333-18.432-47.573333 0-64.469333l118.229333-118.229333a147.370667 147.370667 0 0 0 0-207.274667 147.370667 147.370667 0 0 0-207.274667 0l-150.485333 150.485333a146.261333 146.261333 0 0 0-42.965333 104.405334c0 39.893333 15.36 75.221333 42.965333 104.405333 12.288 12.288 27.648 23.04 43.008 30.72 23.04 10.709333 33.792 38.4 23.04 61.397333-9.216 15.36-26.112 24.576-43.008 24.576z" fill="#ffffff" />
+            </svg>
+        </symbol>
+    </svg>
+    <!-- Scripts -->
+    <script src="scripts/network.js"></script>
+    <script type="text/javascript" src="scripts/language.js"></script>
+    <script src="scripts/ui.js"></script>
+    <script src="scripts/theme.js" async></script>
+    <script src="scripts/clipboard.js" async></script>
+    <!-- Sounds -->
+    <audio id="blop" autobuffer="true">
+        <source src="/sounds/blop.mp3" type="audio/mpeg">
+        <source src="/sounds/blop.ogg" type="audio/ogg">
+    </audio>
+    <!-- no script -->
+    <noscript>
+        <x-noscript class="full center column">
+            <h1>Enable JavaScript</h1>
+            <h3>Snapdrop works only with JavaScript</h3>
+        </x-noscript>
+        <style>
+        x-noscript {
+            background: #599cfc;
+            color: white;
+            z-index: 2;
+        }
+
+        a[href="#info"] {
+            color: white;
+        }
+        </style>
+    </noscript>
+
+</body>
